@@ -31,7 +31,19 @@ class NoteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the request
+        $request->validate([
+            'title' => 'required|max:200',
+            'text' => 'required',
+        ]);
+
+        // Create the new not through the model
+        Note::create([
+            'user_id' => Auth::id(),
+            'title' => $request->get('title'),
+            'text' => $request->get('text'),
+        ]);
+        return to_route('notes.index');
     }
 
     /**

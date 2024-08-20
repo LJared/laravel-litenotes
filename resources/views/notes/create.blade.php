@@ -10,8 +10,8 @@
             <div class="my-6 p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-900 shadow-sm sm:rounded-lg">     
                 <form action="{{ route('notes.store') }}" method="POST">
                     @csrf
-                    <x-text-input type="text" name="title" placeholder="Title" class="w-full" autocomplete="off"></x-text-input>
-                    <x-textarea name="text" rows="10" placeholder="Start typing..." class="w-full" autocomplete="off"></x-textarea>
+                    <x-text-input field="title" type="text" name="title" placeholder="Title" class="w-full" autocomplete="off" :value="@old('title')"></x-text-input>
+                    <x-textarea field="text" name="text" rows="10" placeholder="Start typing..." class="w-full" autocomplete="off" :value="@old('text')"></x-textarea>
                     <x-primary-button class="mt-6">Save</x-primary-button>
                 </form>
             </div>
