@@ -39,7 +39,7 @@ class NoteController extends Controller
         ]);
 
         // Create the new not through the model
-        $note =Note::create([
+        $note = Note::create([
             'user_id' => Auth::id(),
             'uuid' => Str::uuid(),
             'title' => $request->get('title'),
@@ -93,7 +93,8 @@ class NoteController extends Controller
             'title' => $request->get('title'),
             'text' => $request->get('text'),
         ]);
-        return to_route('notes.show', ['note' => $note]);
+        return to_route('notes.show', ['note' => $note])
+            ->with('success', 'Note updated successfully');
     }
 
     /**
@@ -107,6 +108,6 @@ class NoteController extends Controller
         }
 
         $note->delete();
-        return to_route('notes.index');
+        return to_route('notes.index')->with('success', 'Note deleted successfully');
     }
 }
