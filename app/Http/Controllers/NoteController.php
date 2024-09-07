@@ -49,9 +49,13 @@ class NoteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Note $note)
     {
-        //
+        // Verify if the authenticated user owns the note
+        if ($note->user_id !== Auth::id()) {
+            abort(403);
+        }
+        return view('notes.show', ['note' => $note]);
     }
 
     /**
