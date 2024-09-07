@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,6 +41,7 @@ class NoteController extends Controller
         // Create the new not through the model
         Note::create([
             'user_id' => Auth::id(),
+            'uuid' => Str::uuid(),
             'title' => $request->get('title'),
             'text' => $request->get('text'),
         ]);
