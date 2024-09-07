@@ -39,13 +39,13 @@ class NoteController extends Controller
         ]);
 
         // Create the new not through the model
-        Note::create([
+        $note =Note::create([
             'user_id' => Auth::id(),
             'uuid' => Str::uuid(),
             'title' => $request->get('title'),
             'text' => $request->get('text'),
         ]);
-        return to_route('notes.index');
+        return to_route('notes.show', ['note' => $note]);;
     }
 
     /**
@@ -63,17 +63,37 @@ class NoteController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Note $note)
     {
-        //
+        // Verify if the authenticated user owns the note
+        if ($note->user_id !== Auth::id()) {
+            abort(403);
+        }
+        return view('notes.edit', ['note' => $note]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Note $note)
     {
-        //
+        // Verify if the authenticated user owns the note
+        if ($note->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        // Validate the request
+        $request->validate([
+            'title' => 'required|max:200',
+            'text' => 'required',
+        ]);
+
+        // Create the new not through the model
+        $note->update([
+            'title' => $request->get('title'),
+            'text' => $request->get('text'),
+        ]);
+        return to_route('notes.show', ['note' => $note]);
     }
 
     /**
