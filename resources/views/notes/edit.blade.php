@@ -13,6 +13,17 @@
                     @csrf
                     <x-text-input field="title" type="text" name="title" placeholder="Title" class="w-full" autocomplete="off" :value="@old('title', $note->title)"></x-text-input>
                     <x-textarea field="text" name="text" rows="10" placeholder="Start typing..." class="w-full" autocomplete="off" :value="@old('text', $note->text)"></x-textarea>
+                    <div>
+                        <label for="notebook_id">{{ __('Notebook') }}</label>
+                        <select name="notebook_id" id="notebook_id" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                            <option value="">{{ __('Select a notebook') }}</option>
+                            @foreach ($notebooks as $notebook)
+                                <option value="{{ $notebook->id }}" {{ isset($note) && $note->notebook_id == $notebook->id ? 'selected' : '' }}>
+                                    {{ $notebook->name }} <!-- Value for displaying records -->
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                     <x-primary-button class="mt-6">Save</x-primary-button>
                 </form>
             </div>

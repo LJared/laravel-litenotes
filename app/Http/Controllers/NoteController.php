@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use App\Models\Notebook;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +25,8 @@ class NoteController extends Controller
      */
     public function create()
     {
-        return view('notes.create');
+        $notebooks = Notebook::where('user_id', Auth::id())->get();
+        return view('notes.create', ['notebooks' => $notebooks]);
     }
 
     /**
@@ -36,11 +38,13 @@ class NoteController extends Controller
         $request->validate([
             'title' => 'required|max:200',
             'text' => 'required',
+            'notebook_id' => 'required|exists:notebooks,id',
         ]);
 
         // Create the new not through the model
         $note = Note::create([
             'user_id' => Auth::id(),
+            'notebook_id' => $request->get('notebook_id'),
             'uuid' => Str::uuid(),
             'title' => $request->get('title'),
             'text' => $request->get('text'),
@@ -69,7 +73,8 @@ class NoteController extends Controller
         if ($note->user_id !== Auth::id()) {
             abort(403);
         }
-        return view('notes.edit', ['note' => $note]);
+        $notebooks = Notebook::where('user_id', Auth::id())->get();
+        return view('notes.edit', ['note' => $note, 'notebooks' => $notebooks]);
     }
 
     /**
@@ -86,12 +91,14 @@ class NoteController extends Controller
         $request->validate([
             'title' => 'required|max:200',
             'text' => 'required',
+            'notebook_id' => 'required|exists:notebooks,id',
         ]);
 
         // Create the new not through the model
         $note->update([
             'title' => $request->get('title'),
             'text' => $request->get('text'),
+            'notebook_id' => $request->get('notebook_id'),
         ]);
         return to_route('notes.show', ['note' => $note])
             ->with('success', 'Note updated successfully');
