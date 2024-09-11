@@ -26,7 +26,7 @@ class NoteController extends Controller
     public function create()
     {
         $notebooks = Notebook::where('user_id', Auth::id())->get();
-        return view('notes.create', ['notebooks' => $notebooks]);
+        return view('notes.create')->with('notebooks', $notebooks);
     }
 
     /**
@@ -38,7 +38,7 @@ class NoteController extends Controller
         $request->validate([
             'title' => 'required|max:200',
             'text' => 'required',
-            'notebook_id' => 'required|exists:notebooks,id',
+            'notebook_id' => 'exists:notebooks,id',
         ]);
 
         // Create the new not through the model
@@ -91,7 +91,7 @@ class NoteController extends Controller
         $request->validate([
             'title' => 'required|max:200',
             'text' => 'required',
-            'notebook_id' => 'required|exists:notebooks,id',
+            'notebook_id' => 'exists:notebooks,id',
         ]);
 
         // Create the new not through the model
