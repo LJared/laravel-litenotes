@@ -16,7 +16,9 @@ class NoteController extends Controller
     public function index()
     {
         // Fetch all notes of the current user
-        $notes = Auth::user()->notes()->latest('updated_at')->paginate(5);
+        /** @var \App\Models\User $user **/
+        $user = Auth::user();
+        $notes = $user->notes()->latest('updated_at')->paginate(5);
         return view('notes.index')->with('notes', $notes);
     }
 
@@ -42,7 +44,9 @@ class NoteController extends Controller
         ]);
 
         // Create the new not through the model
-        $note = Auth::user()->notes()->create([
+        /** @var \App\Models\User $user **/
+        $user = Auth::user();
+        $note = $user->notes()->create([
             'notebook_id' => $request->get('notebook_id'),
             'uuid' => Str::uuid(),
             'title' => $request->get('title'),
