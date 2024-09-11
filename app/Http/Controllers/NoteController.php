@@ -16,7 +16,7 @@ class NoteController extends Controller
     public function index()
     {
         // Fetch all notes of the current user
-        $notes = Note::where('user_id', Auth::id())->latest('updated_at')->paginate(5);
+        $notes = Auth::user()->notes()->latest('updated_at')->paginate(5);
         return view('notes.index')->with('notes', $notes);
     }
 
@@ -42,8 +42,7 @@ class NoteController extends Controller
         ]);
 
         // Create the new not through the model
-        $note = Note::create([
-            'user_id' => Auth::id(),
+        $note = Auth::user()->notes()->create([
             'notebook_id' => $request->get('notebook_id'),
             'uuid' => Str::uuid(),
             'title' => $request->get('title'),
@@ -58,7 +57,7 @@ class NoteController extends Controller
     public function show(Note $note)
     {
         // Verify if the authenticated user owns the note
-        if ($note->user_id !== Auth::id()) {
+        if (!$note->user->is(Auth::user())) {
             abort(403);
         }
         return view('notes.show', ['note' => $note]);
@@ -70,7 +69,7 @@ class NoteController extends Controller
     public function edit(Note $note)
     {
         // Verify if the authenticated user owns the note
-        if ($note->user_id !== Auth::id()) {
+        if (!$note->user->is(Auth::user())) {
             abort(403);
         }
         $notebooks = Notebook::where('user_id', Auth::id())->get();
@@ -83,7 +82,7 @@ class NoteController extends Controller
     public function update(Request $request, Note $note)
     {
         // Verify if the authenticated user owns the note
-        if ($note->user_id !== Auth::id()) {
+        if (!$note->user->is(Auth::user())) {
             abort(403);
         }
 
@@ -110,7 +109,7 @@ class NoteController extends Controller
     public function destroy(Note $note)
     {
         // Verify if the authenticated user owns the note
-        if ($note->user_id !== Auth::id()) {
+        if (!$note->user->is(Auth::user())) {
             abort(403);
         }
 
