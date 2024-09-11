@@ -33,8 +33,8 @@
                     @csrf
                     @method('DELETE')
                     <x-danger-button
-                        onclick="return confirm('Are you sure you want to delete this note?')">
-                        Delete
+                        onclick="return confirm('Move note to trash?')">
+                        Move to Trash
                     </x-danger-button>
                 </form>
             </div>
