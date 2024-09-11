@@ -50,6 +50,14 @@
                         @csrf
                         <x-primary-button>Restore Note</x-primary-button>
                     </form>
+                    <form action="{{ route('trashed.destroy', $note) }}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <x-danger-button
+                            onclick="return confirm('Delete permanently? This action cannot be undone')">
+                            Delete Forever
+                        </x-danger-button>
+                    </form>
                 @endif
             </div>
             <div class="my-6 p-6 bg-white border-b border-gray-200 dark:bg-gray-800 shadow-sm sm:rounded-lg">
